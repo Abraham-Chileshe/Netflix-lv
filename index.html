@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Netflix • Our Love Story ❤️</title>
+    
+    <!-- Meta description -->
+    <meta name="description" content="Our love story streaming exclusively on Netflix.">
+    <meta name="theme-color" content="#141414">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Ambient Canvas for floating subtle bokeh -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- ==========================================================================
+         NETFLIX LOCK SCREEN: "WHO'S WATCHING?" & PIN GATE
+         ========================================================================== -->
+    <section id="netflix-profile-gate" class="profile-gate-screen active">
+        <div class="netflix-logo-header">
+            <span class="netflix-brand-red">NETFLIX</span>
+        </div>
+
+        <div class="profiles-container">
+            <h1 class="who-watching-title">Who's watching?</h1>
+            
+            <div class="profile-avatar-card" id="primary-profile-btn">
+                <div class="avatar-box">
+                    <img src="assets/photos/6.jpg" alt="Her Profile" class="avatar-img">
+                    <div class="avatar-lock-overlay">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+                <span class="profile-name" id="partner-profile-name">My Gorgeous Doctor</span>
+            </div>
+
+            <!-- PIN Form Popup -->
+            <div class="profile-pin-box" id="pin-box">
+                <p class="pin-instruction"><i class="fas fa-lock"></i> Enter Secret 4-Digit PIN</p>
+                <div class="pin-dots-display" id="passcode-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+
+                <!-- Tactile Keypad -->
+                <div class="netflix-keypad">
+                    <button class="key-btn" data-key="1">1</button>
+                    <button class="key-btn" data-key="2">2</button>
+                    <button class="key-btn" data-key="3">3</button>
+                    <button class="key-btn" data-key="4">4</button>
+                    <button class="key-btn" data-key="5">5</button>
+                    <button class="key-btn" data-key="6">6</button>
+                    <button class="key-btn" data-key="7">7</button>
+                    <button class="key-btn" data-key="8">8</button>
+                    <button class="key-btn" data-key="9">9</button>
+                    <button class="key-btn key-action" data-key="clear" title="Delete"><i class="fas fa-delete-left"></i></button>
+                    <button class="key-btn" data-key="0">0</button>
+                    <button class="key-btn key-action" data-key="Enter" title="Enter"><i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <button id="profile-unlock-btn" class="netflix-red-btn">
+                    <span>Unlock Profile</span>
+                    <i class="fas fa-lock-open"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         MAIN NETFLIX INTERFACE (EXACT NETFLIX LAYOUT)
+         ========================================================================== -->
+    <div id="netflix-main-app" class="netflix-app-layout">
+        
+        <!-- Left Netflix Sidebar Icons -->
+        <aside id="netflix-sidebar">
+            <div class="sidebar-top">
+                <button class="sidebar-item" id="sidebar-search-btn" title="Search"><i class="fas fa-search"></i></button>
+                <button class="sidebar-item active" id="sidebar-home-btn" title="Home"><i class="fas fa-house"></i></button>
+                <button class="sidebar-item" id="sidebar-movies-btn" title="Movies & Memories"><i class="fas fa-film"></i></button>
+                <button class="sidebar-item" id="sidebar-tv-btn" title="Series"><i class="fas fa-tv"></i></button>
+                <button class="sidebar-item" id="sidebar-trending-btn" title="Trending"><i class="fas fa-arrow-trend-up"></i></button>
+                <button class="sidebar-item" id="sidebar-list-btn" title="My List"><i class="fas fa-plus"></i></button>
+                <button class="sidebar-item" id="sidebar-shuffle-btn" title="Surprise Me"><i class="fas fa-shuffle"></i></button>
+            </div>
+            <div class="sidebar-bottom">
+                <div class="mini-profile-avatar" title="Switch Profile" id="switch-profile-btn">
+                    <img src="assets/photos/6.jpg" alt="Profile">
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Main Content Area -->
+        <div id="netflix-viewport">
+            
+            <!-- Top Sticky Header -->
+            <header id="netflix-navbar">
+                <div class="nav-left">
+                    <span class="netflix-logo-text">NETFLIX</span>
+                    <nav class="netflix-primary-nav">
+                        <a href="#hero-billboard" class="nav-link active">Home</a>
+                        <a href="#row-trending" class="nav-link">Trending</a>
+                        <a href="#row-top10" class="nav-link">Top 10</a>
+                        <a href="#row-medicine" class="nav-link">Doctor Specials 🩺</a>
+                        <a href="#row-specials" class="nav-link">Episodes</a>
+                    </nav>
+                </div>
+
+                <div class="nav-right">
+                    <!-- Soundtrack Floating Controller -->
+                    <div class="netflix-audio-pill" id="soundtrack-widget">
+                        <button id="soundtrack-toggle-btn" class="pill-play-icon" aria-label="Play Soundtrack">
+                            <i class="fas fa-play" id="audio-play-icon"></i>
+                        </button>
+                        <div class="pill-track-info">
+                            <span class="pill-tag"><i class="fas fa-compact-disc spin-record"></i> ORIGINAL SOUNDTRACK</span>
+                            <span id="pill-song-title">Our Love Melody</span>
+                        </div>
+                        <div class="sound-bars" id="sound-bars">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- NETFLIX HERO BILLBOARD BANNER (PORTRAIT POSTER SHOWCASE & SYNOPSIS) -->
+            <section id="hero-billboard" class="hero-billboard">
+                <!-- Ambient Backdrop Glow -->
+                <div class="hero-ambient-glow" id="hero-ambient-glow"></div>
+
+                <!-- Left Column: Netflix Info & Controls -->
+                <div class="hero-info-layer">
+                    <div class="hero-series-badge">
+                        <span class="n-logo">N</span> <span class="badge-text">SERIES</span>
+                    </div>
+
+                    <h1 class="hero-title" id="hero-title">OUR LOVE STORY</h1>
+
+                    <div class="hero-metadata">
+                        <span class="match-score" id="hero-meta-match">99% Match for You</span>
+                        <span class="meta-rating">6 MONTHS</span>
+                        <span class="meta-badge">Ultra HD 4K</span>
+                        <span class="meta-genres" id="hero-meta-genres">Romantic • True Story • Soulmates</span>
+                    </div>
+
+                    <p class="hero-description" id="hero-description">
+                        Separated by physical miles but bound by pure love, a tech guy and a brilliant doctor build an unbreakable bond full of late-night laughter, sweet support, and timeless memories.
+                    </p>
+
+                    <div class="hero-action-buttons">
+                        <button class="btn-netflix-play" id="hero-play-btn">
+                            <i class="fas fa-play"></i> <span>Play Story</span>
+                        </button>
+                        <button class="btn-netflix-info" id="hero-info-btn">
+                            <i class="fas fa-circle-info"></i> <span>More Info</span>
+                        </button>
+                    </div>
+
+                    <!-- Hero Slide Indicator Dots -->
+                    <div class="hero-slide-dots" id="hero-slide-dots">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Right Column: Full-Cover Showcase Filling the Right Half with Edge Vignettes -->
+                <div class="hero-featured-showcase">
+                    <img id="hero-poster-img-a" src="assets/photos/6.jpg" alt="Featured Story" class="hero-cover-slide active">
+                    <img id="hero-poster-img-b" src="assets/photos/2.PNG" alt="Featured Story" class="hero-cover-slide">
+                    <div class="hero-showcase-vignette-left"></div>
+                    <div class="hero-showcase-vignette-bottom"></div>
+                    <div class="hero-showcase-vignette-top"></div>
+                </div>
+            </section>
+
+            <!-- NETFLIX CONTENT ROWS -->
+            <div class="netflix-content-rows">
+                
+                <!-- ROW 1: TRENDING NOW -->
+                <div class="netflix-row" id="row-trending">
+                    <h2 class="row-title">Trending Now • Most Cherished Moments</h2>
+                    <div class="row-slider-wrapper">
+                        <button class="slider-arrow arrow-prev" data-row="trending-slider"><i class="fas fa-chevron-left"></i></button>
+                        <div class="row-slider" id="trending-slider">
+                            <!-- Injected dynamically -->
+                        </div>
+                        <button class="slider-arrow arrow-next" data-row="trending-slider"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- ROW 2: TOP 10 MEMORIES (WITH BIG NETFLIX 1-10 NUMBERS) -->
+                <div class="netflix-row top10-row" id="row-top10">
+                    <h2 class="row-title">Top 10 in Our Hearts Today</h2>
+                    <div class="row-slider-wrapper">
+                        <button class="slider-arrow arrow-prev" data-row="top10-slider"><i class="fas fa-chevron-left"></i></button>
+                        <div class="row-slider top10-slider-container" id="top10-slider">
+                            <!-- Injected dynamically with giant numbers -->
+                        </div>
+                        <button class="slider-arrow arrow-next" data-row="top10-slider"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- ROW 3: WOMEN IN MEDICINE • MY HERO IN SCRUBS -->
+                <div class="netflix-row" id="row-medicine">
+                    <h2 class="row-title">Women in Medicine • My Favorite Doctor 🩺</h2>
+                    <div class="row-slider-wrapper">
+                        <button class="slider-arrow arrow-prev" data-row="medicine-slider"><i class="fas fa-chevron-left"></i></button>
+                        <div class="row-slider" id="medicine-slider">
+                            <!-- Injected dynamically -->
+                        </div>
+                        <button class="slider-arrow arrow-next" data-row="medicine-slider"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- ROW 4: YOUR GUY (THE BOYFRIEND) ❤️ -->
+                <div class="netflix-row" id="row-boyfriend">
+                    <h2 class="row-title">Your Guy • Your #1 Fan & Boyfriend ❤️</h2>
+                    <div class="row-slider-wrapper">
+                        <button class="slider-arrow arrow-prev" data-row="boyfriend-slider"><i class="fas fa-chevron-left"></i></button>
+                        <div class="row-slider" id="boyfriend-slider">
+                            <!-- Injected dynamically -->
+                        </div>
+                        <button class="slider-arrow arrow-next" data-row="boyfriend-slider"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- ROW 5: EXCLUSIVE VIDEO REELS 🎥 -->
+                <div class="netflix-row" id="row-videos">
+                    <h2 class="row-title">Live Video Reels • Captured in Motion 🎥</h2>
+                    <div class="row-slider-wrapper">
+                        <button class="slider-arrow arrow-prev" data-row="videos-slider"><i class="fas fa-chevron-left"></i></button>
+                        <div class="row-slider" id="videos-slider">
+                            <!-- Injected dynamically -->
+                        </div>
+                        <button class="slider-arrow arrow-next" data-row="videos-slider"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- ROW 6: ALL MEDIA MEMORIES -->
+                <div class="netflix-row" id="row-specials">
+                    <h2 class="row-title">The Complete Love Anthology • All 47 Memories 🎬</h2>
+                    <div class="row-slider-wrapper">
+                        <button class="slider-arrow arrow-prev" data-row="specials-slider"><i class="fas fa-chevron-left"></i></button>
+                        <div class="row-slider" id="specials-slider">
+                            <!-- Injected dynamically -->
+                        </div>
+                        <button class="slider-arrow arrow-next" data-row="specials-slider"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- NETFLIX FOOTER -->
+            <footer class="netflix-footer">
+                <p class="copyright-text">© 2026 Loveflix, Inc. Dedicated to the sweetest girl alive ❤️</p>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         NETFLIX FULLSCREEN VIDEO / EPISODE MODAL (WHEN CLICKING PLAY OR ANY CARD)
+         ========================================================================== -->
+    <div id="netflix-player-modal" class="netflix-modal-backdrop">
+        <div class="netflix-modal-window">
+            <button class="modal-exit-btn" id="close-player-modal" aria-label="Close Preview"><i class="fas fa-xmark"></i></button>
+
+            <!-- Video Player Stage -->
+            <div class="player-video-stage">
+                <img id="player-modal-img" src="assets/photos/6.jpg" alt="Episode Media" class="player-modal-img">
+                <video id="player-modal-video" class="player-modal-video" playsinline loop style="display:none;"></video>
+                <div class="player-vignette-bottom"></div>
+
+                <!-- Subtitle Live Caption Typing Area -->
+                <div class="player-subtitle-box">
+                    <p class="subtitle-text" id="player-subtitle-text">"Loading romantic memory message..."</p>
+                </div>
+
+                <!-- Live Player Controls Overlay -->
+                <div class="player-controls-bar">
+                    <div class="timeline-bar">
+                        <div class="timeline-fill" id="timeline-fill"></div>
+                    </div>
+                    <div class="controls-row">
+                        <div class="ctrl-left">
+                            <button id="player-playpause-btn" class="ctrl-icon"><i class="fas fa-play"></i></button>
+                            <button id="player-prev-btn" class="ctrl-icon" title="Previous Episode"><i class="fas fa-backward-step"></i></button>
+                            <button id="player-next-btn" class="ctrl-icon" title="Next Episode"><i class="fas fa-forward-step"></i></button>
+                            <span class="player-episode-tag" id="player-episode-tag">S1:E6 "My Favorite Smile"</span>
+                        </div>
+                        <div class="ctrl-right">
+                            <button id="player-audio-toggle" class="ctrl-icon" title="Mute/Unmute Soundtrack"><i class="fas fa-volume-high"></i></button>
+                            <button id="player-fullscreen-btn" class="ctrl-icon" title="Fullscreen"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Content & Episodes List -->
+            <div class="player-modal-details">
+                <div class="modal-header-row">
+                    <div class="details-left">
+                        <div class="modal-tags">
+                            <span class="match-score">99% Match for You</span>
+                            <span class="meta-rating">18+</span>
+                            <span class="meta-badge">HD</span>
+                            <span class="meta-badge">6 Months Season</span>
+                        </div>
+                        <h2 class="modal-episode-title" id="modal-episode-title">Episode 6 • My Favorite Smile in the Universe</h2>
+                        <p class="modal-story-body" id="modal-story-body">
+                            Whenever I have a rough day, all I need is one photo of you smiling like this. It melts away all my stress in a heartbeat.
+                        </p>
+                    </div>
+                    <div class="details-right">
+                        <p class="cast-line"><span>Starring:</span> The Prettiest Girl in Medicine</p>
+                        <p class="cast-line"><span>Written by:</span> Your Forever Boyfriend</p>
+                        <p class="cast-line"><span>Genres:</span> True Romance, Heartfelt Drama, Soulmates</p>
+                    </div>
+                </div>
+
+                <!-- Episodes Selector Grid inside Modal -->
+                <div class="episodes-selector-section">
+                    <div class="episodes-header">
+                        <h3>Episodes</h3>
+                        <span class="season-badge">Season 1: 6 Months (13 Episodes)</span>
+                    </div>
+                    <div class="episodes-list" id="modal-episodes-list">
+                        <!-- 13 episodes rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
